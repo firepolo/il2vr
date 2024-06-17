@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.3.1_28"/>
+	<classpathentry kind="lib" path="E:/services/IL-2 Sturmovik 1946/dump/ClassDump_4.13.4.jar" sourcepath="src/com/maddox/il2/engine"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="IL-2 Eclipse Ant Postbuild Script">
+	<property file="postbuild.properties"/>
+    <target name="Hash and Copy Files">
+      <echo>Hashing and copying Files...</echo>
+      <exec dir = "${basedir}" executable = "cmd.exe">
+        <arg line = "/c ${il2.postbuild.executable} ${il2.postbuild.source.dir} &quot;${targetDir}&quot;"/>
+      </exec>
+      <echo>Hashing and copying Files done!</echo>
+    </target>
+    <description>Hashes files and copies them into destination folder.</description>
+</project>
