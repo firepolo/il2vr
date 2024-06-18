@@ -69,9 +69,20 @@ public class Camera3D extends Camera
             Camera.SetFOV(FOV, ZNear, ZFar);
             pos.getRender(Camera.tmpP, Camera.tmpO);
             
-            Camera.tmpd[0] = Camera.tmpP.x + OpenVR.currentEyeLocation[0];
-            Camera.tmpd[1] = Camera.tmpP.y + OpenVR.currentEyeLocation[1];
-            Camera.tmpd[2] = Camera.tmpP.z + OpenVR.currentEyeLocation[2];
+            float cy = Math.cos(Camera.tmpO.Pitch);
+            float sy = Math.sin(Camera.tmpO.Pitch);
+            float cb = Math.cos(Camera.tmpO.Yaw);
+            float sb = Math.sin(Camera.tmpO.Yaw);
+            float ca = Math.cos(Camera.tmpO.Roll);
+            float sa = Math.sin(Camera.tmpO.Roll);
+
+            float x = OpenVR.currentEyeLocation.x * (cb*cy) + OpenVR.currentEyeLocation.y * (sa*sb*cy-ca*sy) + OpenVR.currentEyeLocation.z * (ca*sb*cy+sa*sy);
+            float y = OpenVR.currentEyeLocation.x * (cb*sy) + OpenVR.currentEyeLocation.y * (sa*sb*sy+ca*cy) + OpenVR.currentEyeLocation.z * (ca*sb*sy-sa*cy);
+            float z = OpenVR.currentEyeLocation.x * (-sb) + OpenVR.currentEyeLocation.y * (sa*cb) + OpenVR.currentEyeLocation.z * (ca*cb);
+
+            Camera.tmpd[0] = Camera.tmpP.x + x;
+            Camera.tmpd[1] = Camera.tmpP.y + y;
+            Camera.tmpd[2] = Camera.tmpP.z + z;
             Camera.tmpd[3] = -Camera.tmpO.azimut();
             Camera.tmpd[4] = Camera.tmpO.tangage();
             Camera.tmpd[5] = -Camera.tmpO.kren();

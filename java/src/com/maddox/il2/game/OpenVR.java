@@ -12,9 +12,9 @@ public class OpenVR
 	*/
 	
 	public static float[] hmdLocation = new float[6];
-	public static float[] leftEyeLocation = new float[6];
-	public static float[] rightEyeLocation = new float[6];
-	public static float[] currentEyeLocation = new float[6];
+	public static float[] leftEyeLocation = new float[3];
+	public static float[] rightEyeLocation = new float[3];
+	public static Tuple3f currentEyeLocation = new Tuple3f();
 	
 	public static float fov;
 	
@@ -35,7 +35,7 @@ public class OpenVR
 	
 	public static native int submitRender();
 	
-	public static native void getHmdLocation(float[] location, float[] leftLocation, float[] rightLocation);
+	public static native void getHmdLocation(float[] location);
 	public static native void resetHmdLocation();
 
 	static

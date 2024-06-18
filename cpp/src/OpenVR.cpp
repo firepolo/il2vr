@@ -1,5 +1,4 @@
 #include <OpenVR.h>
-#include <Logger.hpp>
 #include <openvr/openvr.h>
 #include <glm/glm.hpp>
 #include <glew/glew.h>
@@ -27,8 +26,6 @@ float tmp[6];
 vr::TrackedDevicePose_t hmdPose;
 vr::HmdMatrix34_t originPose;
 
-glm::mat4x3 leftEyeMatrix, rightEyeMatrix;
-
 inline glm::mat3x4 GetHmdMatrix(vr::HmdMatrix34_t& m)
 {
 	return glm::mat3x4(
@@ -38,14 +35,9 @@ inline glm::mat3x4 GetHmdMatrix(vr::HmdMatrix34_t& m)
 	);
 }
 
-inline glm::mat4x3 GetEyeMatrix(vr::HmdMatrix34_t m)
+inline glm::vec3 GetEyeVector(vr::HmdMatrix34_t m)
 {
-	return glm::mat4x3(
-		m.m[0][0], m.m[1][0], m.m[2][0],
-		m.m[0][1], m.m[1][1], m.m[2][1],
-		m.m[0][2], m.m[1][2], m.m[2][2],
-		m.m[0][3], m.m[1][3], m.m[2][3]
-	);
+	return glm::vec3(m.m[0][3], m.m[1][3], m.m[2][3]);
 }
 
 glm::mat4 GetHMDMatrixProjectionEye(vr::Hmd_Eye eye)
@@ -130,8 +122,11 @@ JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_init(JNIEnv *env, jclass 
 	vr::VRSystem()->GetProjectionRaw(vr::Eye_Left, &tmp[0], &tmp[1], &tmp[2], &tmp[3]);
 	env->SetStaticFloatField(self, env->GetStaticFieldID(self, "fov", "F"), glm::degrees(glm::abs(atanf(tmp[0])) + glm::abs(atanf(tmp[1]))));
 
-	leftEyeMatrix = GetEyeMatrix(vr::VRSystem()->GetEyeToHeadTransform(vr::Eye_Left));
-	rightEyeMatrix = GetEyeMatrix(vr::VRSystem()->GetEyeToHeadTransform(vr::Eye_Right));
+	glm::vec3 leftEyeLocation = GetEyeVector(vr::VRSystem()->GetEyeToHeadTransform(vr::Eye_Left));
+	env->SetStaticObjectField(self, env->GetStaticFieldID(self, "leftEyeLocation", "[F"), leftEyeLocation);
+
+	glm::vec3 rightEyeLocation = GetEyeVector(vr::VRSystem()->GetEyeToHeadTransform(vr::Eye_Right));
+	env->SetStaticObjectField(self, env->GetStaticFieldID(self, "rightEyeLocation", "[F"), rightEyeLocation);
 
 	/*projectionLeft = GetHMDMatrixProjectionEye(vr::Eye_Left);
 	projectionRight = GetHMDMatrixProjectionEye(vr::Eye_Right);
@@ -213,7 +208,7 @@ JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_submitRender(JNIEnv *env,
 	vr::VRCompositor()->Submit(vr::Eye_Right, &rightEyeTexture);
 }
 
-JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_getHmdLocation(JNIEnv *env, jclass self, jfloatArray hmdObject, jfloatArray leftObject, jfloatArray rightObject)
+JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_getHmdLocation(JNIEnv *env, jclass self, jfloatArray hmdObject)
 {
 	vr::VRCompositor()->WaitGetPoses(&hmdPose, 1, nullptr, 0);
 	
@@ -234,26 +229,6 @@ JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_getHmdLocation(JNIEnv *en
 	tmp[4] = -glm::degrees(atan2(-hmd.m[2][0], glm::sqrt(hmd.m[0][0] * hmd.m[0][0] + hmd.m[1][0] * hmd.m[1][0])));
 	tmp[5] = -glm::degrees(atan2(hmd.m[1][0] , hmd.m[0][0]));
 	env->SetFloatArrayRegion(hmdObject, 0, 6, tmp);
-
-	glm::mat3x4 hmdRotation = GetHmdMatrix(hmd);
-
-	glm::mat3x4 m = hmdRotation * leftEyeMatrix;
-	tmp[0] = m[0][3];
-	tmp[1] = m[1][3];
-	tmp[2] = m[2][3];
-	tmp[3] = glm::degrees(atan2(m[2][1], m[2][2]));
-	tmp[4] = -glm::degrees(atan2(-m[2][0], glm::sqrt(m[0][0] * m[0][0] + m[1][0] * m[1][0])));
-	tmp[5] = -glm::degrees(atan2(m[1][0], m[0][0]));
-	env->SetFloatArrayRegion(leftObject, 0, 6, tmp);
-
-	m = hmdRotation * rightEyeMatrix;
-	tmp[0] = m[0][3];
-	tmp[1] = m[1][3];
-	tmp[2] = m[2][3];
-	tmp[3] = glm::degrees(atan2(m[2][1], m[2][2]));
-	tmp[4] = -glm::degrees(atan2(-m[2][0], glm::sqrt(m[0][0] * m[0][0] + m[1][0] * m[1][0])));
-	tmp[5] = -glm::degrees(atan2(m[1][0], m[0][0]));
-	env->SetFloatArrayRegion(rightObject, 0, 6, tmp);
 }
 
 JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_resetHmdLocation(JNIEnv*, jclass)

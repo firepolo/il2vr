@@ -326,18 +326,18 @@ public class Renders
         	OpenVR.resetHmdLocation();
         }
         
-        OpenVR.getHmdLocation(OpenVR.hmdLocation, OpenVR.leftEyeLocation, OpenVR.rightEyeLocation);
+        OpenVR.getHmdLocation(OpenVR.hmdLocation);
         
         //EventLog.type("FOV: " + OpenVR.fov);
         
-        System.arraycopy(OpenVR.leftEyeLocation, 0, OpenVR.currentEyeLocation, 0, 6);
+        OpenVR.currentEyeLocation.set(OpenVR.leftEyeLocation);
         doPaint();
         
         OpenVR.preRenderLeft();
         doPaint();
         OpenVR.postRenderLeft();
         
-        System.arraycopy(OpenVR.rightEyeLocation, 0, OpenVR.currentEyeLocation, 0, 6);
+        OpenVR.currentEyeLocation.set(OpenVR.rightEyeLocation);
         OpenVR.preRenderRight();
         doPaint();
         OpenVR.postRenderRight();

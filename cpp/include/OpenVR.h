@@ -85,7 +85,7 @@ JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_submitRender
  * Signature: ([F[F[F)V
  */
 JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_getHmdLocation
-  (JNIEnv *, jclass, jfloatArray, jfloatArray, jfloatArray);
+  (JNIEnv *, jclass, jfloatArray);
 
 /*
  * Class:     com_maddox_il2_game_OpenVR
