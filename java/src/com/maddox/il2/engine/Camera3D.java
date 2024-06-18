@@ -6,6 +6,7 @@
 package com.maddox.il2.engine;
 
 import com.maddox.JGP.Point3d;
+import com.maddox.JGP.Point3f;
 import com.maddox.il2.ai.EventLog;
 import com.maddox.il2.game.OpenVR;
 
@@ -63,22 +64,32 @@ public class Camera3D extends Camera
             return false;
         } else
         {
-        	//EventLog.type("currentEyeLocation("+OpenVR.leftEyeLocation[0]+", "+OpenVR.leftEyeLocation[1]+", "+OpenVR.leftEyeLocation[2]+", "+OpenVR.leftEyeLocation[3]+", "+OpenVR.leftEyeLocation[4]+", "+OpenVR.leftEyeLocation[5]+")");
             Camera.SetZOrder(Render.current().getZOrder());
             Camera.SetViewportCrop(f, i, j, k, l, i1, j1, k1, l1, i2, j2);
             Camera.SetFOV(FOV, ZNear, ZFar);
             pos.getRender(Camera.tmpP, Camera.tmpO);
             
-            float cy = Math.cos(Camera.tmpO.Pitch);
-            float sy = Math.sin(Camera.tmpO.Pitch);
-            float cb = Math.cos(Camera.tmpO.Yaw);
-            float sb = Math.sin(Camera.tmpO.Yaw);
-            float ca = Math.cos(Camera.tmpO.Roll);
-            float sa = Math.sin(Camera.tmpO.Roll);
+            /*final float a = (float)Math.toRadians(-Camera.tmpO.azimut());
+            final float t = (float)Math.toRadians(Camera.tmpO.tangage());
+            final float r = (float)Math.toRadians(-Camera.tmpO.kren());*/
+            final float a = (float)Math.toRadians(Camera.tmpO.Yaw);
+            final float t = (float)Math.toRadians(Camera.tmpO.Pitch);
+            final float r = (float)Math.toRadians(Camera.tmpO.Roll);
+            
+            final float cy = (float)Math.cos(r);
+            final float sy = (float)Math.sin(r);
+            final float cb = (float)Math.cos(a);
+            final float sb = (float)Math.sin(a);
+            final float ca = (float)Math.cos(t);
+            final float sa = (float)Math.sin(t);
 
-            float x = OpenVR.currentEyeLocation.x * (cb*cy) + OpenVR.currentEyeLocation.y * (sa*sb*cy-ca*sy) + OpenVR.currentEyeLocation.z * (ca*sb*cy+sa*sy);
-            float y = OpenVR.currentEyeLocation.x * (cb*sy) + OpenVR.currentEyeLocation.y * (sa*sb*sy+ca*cy) + OpenVR.currentEyeLocation.z * (ca*sb*sy-sa*cy);
-            float z = OpenVR.currentEyeLocation.x * (-sb) + OpenVR.currentEyeLocation.y * (sa*cb) + OpenVR.currentEyeLocation.z * (ca*cb);
+            final float x = OpenVR.currentEyeLocation.x * (cb*cy) + OpenVR.currentEyeLocation.y * (sa*sb*cy-ca*sy) + OpenVR.currentEyeLocation.z * (ca*sb*cy+sa*sy);
+            final float y = OpenVR.currentEyeLocation.x * (cb*sy) + OpenVR.currentEyeLocation.y * (sa*sb*sy+ca*cy) + OpenVR.currentEyeLocation.z * (ca*sb*sy-sa*cy);
+            final float z = OpenVR.currentEyeLocation.x * (-sb) + OpenVR.currentEyeLocation.y * (sa*cb) + OpenVR.currentEyeLocation.z * (ca*cb);
+            
+            Point3d p = new Point3d(pos.getCurrentPoint());
+            p.sub(pos.getPrev().P);
+            if (OpenVR.currentEyeLocation.x > 0.001f) EventLog.type("fix("+new Point3f(x, y, z).toString()+"), prev("+p.toString()+")");
 
             Camera.tmpd[0] = Camera.tmpP.x + x;
             Camera.tmpd[1] = Camera.tmpP.y + y;

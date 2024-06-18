@@ -106,10 +106,6 @@ void DeleteFrameBuffer(FramebufferDesc& framebufferDesc)
 	glDeleteFramebuffers(1, &framebufferDesc.renderFramebufferId);
 }
 
-void GetFov()
-{
-}
-
 JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_init(JNIEnv *env, jclass self)
 {
 	if (!vr::VR_IsHmdPresent()) return 1;
@@ -123,10 +119,11 @@ JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_init(JNIEnv *env, jclass 
 	env->SetStaticFloatField(self, env->GetStaticFieldID(self, "fov", "F"), glm::degrees(glm::abs(atanf(tmp[0])) + glm::abs(atanf(tmp[1]))));
 
 	glm::vec3 leftEyeLocation = GetEyeVector(vr::VRSystem()->GetEyeToHeadTransform(vr::Eye_Left));
-	env->SetStaticObjectField(self, env->GetStaticFieldID(self, "leftEyeLocation", "[F"), &leftEyeLocation.x);
+	env->SetFloatArrayRegion(reinterpret_cast<jfloatArray>(env->GetStaticObjectField(self, env->GetStaticFieldID(self, "leftEyeLocation", "[F"))), 0, 3, &leftEyeLocation.x);
 
 	glm::vec3 rightEyeLocation = GetEyeVector(vr::VRSystem()->GetEyeToHeadTransform(vr::Eye_Right));
-	env->SetStaticObjectField(self, env->GetStaticFieldID(self, "rightEyeLocation", "[F"), &rightEyeLocation.x);
+	env->SetFloatArrayRegion(reinterpret_cast<jfloatArray>(env->GetStaticObjectField(self, env->GetStaticFieldID(self, "rightEyeLocation", "[F"))), 0, 3, &rightEyeLocation.x);
+
 
 	/*projectionLeft = GetHMDMatrixProjectionEye(vr::Eye_Left);
 	projectionRight = GetHMDMatrixProjectionEye(vr::Eye_Right);
@@ -151,8 +148,6 @@ JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_initGL(JNIEnv* env, jclas
 JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_shutdown(JNIEnv *env, jclass self)
 {
 	vr::VR_Shutdown();
-
-	bhe::Logger::Shutdown();
 }
 
 JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_shutdownGL(JNIEnv* env, jclass self)

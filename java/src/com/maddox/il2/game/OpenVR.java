@@ -1,5 +1,7 @@
 package com.maddox.il2.game;
 
+import com.maddox.JGP.Point3f;
+
 public class OpenVR
 {
 	/*
@@ -14,7 +16,7 @@ public class OpenVR
 	public static float[] hmdLocation = new float[6];
 	public static float[] leftEyeLocation = new float[3];
 	public static float[] rightEyeLocation = new float[3];
-	public static Tuple3f currentEyeLocation = new Tuple3f();
+	public static final Point3f currentEyeLocation = new Point3f();
 	
 	public static float fov;
 	
