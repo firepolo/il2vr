@@ -123,10 +123,10 @@ JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_init(JNIEnv *env, jclass 
 	env->SetStaticFloatField(self, env->GetStaticFieldID(self, "fov", "F"), glm::degrees(glm::abs(atanf(tmp[0])) + glm::abs(atanf(tmp[1]))));
 
 	glm::vec3 leftEyeLocation = GetEyeVector(vr::VRSystem()->GetEyeToHeadTransform(vr::Eye_Left));
-	env->SetStaticObjectField(self, env->GetStaticFieldID(self, "leftEyeLocation", "[F"), leftEyeLocation);
+	env->SetStaticObjectField(self, env->GetStaticFieldID(self, "leftEyeLocation", "[F"), &leftEyeLocation.x);
 
 	glm::vec3 rightEyeLocation = GetEyeVector(vr::VRSystem()->GetEyeToHeadTransform(vr::Eye_Right));
-	env->SetStaticObjectField(self, env->GetStaticFieldID(self, "rightEyeLocation", "[F"), rightEyeLocation);
+	env->SetStaticObjectField(self, env->GetStaticFieldID(self, "rightEyeLocation", "[F"), &rightEyeLocation.x);
 
 	/*projectionLeft = GetHMDMatrixProjectionEye(vr::Eye_Left);
 	projectionRight = GetHMDMatrixProjectionEye(vr::Eye_Right);
