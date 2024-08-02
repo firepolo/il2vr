@@ -7,6 +7,7 @@ package com.maddox.il2.engine;
 
 import com.maddox.JGP.Point3d;
 import com.maddox.JGP.Point3f;
+import com.maddox.JGP.Tuple3f;
 import com.maddox.il2.ai.EventLog;
 import com.maddox.il2.game.OpenVR;
 
@@ -69,34 +70,16 @@ public class Camera3D extends Camera
             Camera.SetFOV(FOV, ZNear, ZFar);
             pos.getRender(Camera.tmpP, Camera.tmpO);
             
-            /*final float a = (float)Math.toRadians(-Camera.tmpO.azimut());
-            final float t = (float)Math.toRadians(Camera.tmpO.tangage());
-            final float r = (float)Math.toRadians(-Camera.tmpO.kren());*/
-            final float a = (float)Math.toRadians(Camera.tmpO.Yaw);
-            final float t = (float)Math.toRadians(Camera.tmpO.Pitch);
-            final float r = (float)Math.toRadians(Camera.tmpO.Roll);
-            
-            final float cy = (float)Math.cos(r);
-            final float sy = (float)Math.sin(r);
-            final float cb = (float)Math.cos(a);
-            final float sb = (float)Math.sin(a);
-            final float ca = (float)Math.cos(t);
-            final float sa = (float)Math.sin(t);
+            tmpR.set(OpenVR.currentEyeLocation.z, -OpenVR.currentEyeLocation.x, OpenVR.currentEyeLocation.y);
+            Camera.tmpO.transform(tmpR);
 
-            final float x = OpenVR.currentEyeLocation.x * (cb*cy) + OpenVR.currentEyeLocation.y * (sa*sb*cy-ca*sy) + OpenVR.currentEyeLocation.z * (ca*sb*cy+sa*sy);
-            final float y = OpenVR.currentEyeLocation.x * (cb*sy) + OpenVR.currentEyeLocation.y * (sa*sb*sy+ca*cy) + OpenVR.currentEyeLocation.z * (ca*sb*sy-sa*cy);
-            final float z = OpenVR.currentEyeLocation.x * (-sb) + OpenVR.currentEyeLocation.y * (sa*cb) + OpenVR.currentEyeLocation.z * (ca*cb);
-            
-            Point3d p = new Point3d(pos.getCurrentPoint());
-            p.sub(pos.getPrev().P);
-            if (OpenVR.currentEyeLocation.x > 0.001f) EventLog.type("fix("+new Point3f(x, y, z).toString()+"), prev("+p.toString()+")");
-
-            Camera.tmpd[0] = Camera.tmpP.x + x;
-            Camera.tmpd[1] = Camera.tmpP.y + y;
-            Camera.tmpd[2] = Camera.tmpP.z + z;
+            Camera.tmpd[0] = Camera.tmpP.x + tmpR.x;
+            Camera.tmpd[1] = Camera.tmpP.y + tmpR.y;
+            Camera.tmpd[2] = Camera.tmpP.z + tmpR.z;
             Camera.tmpd[3] = -Camera.tmpO.azimut();
             Camera.tmpd[4] = Camera.tmpO.tangage();
             Camera.tmpd[5] = -Camera.tmpO.kren();
+            
             Camera.SetCameraPos(Camera.tmpd);
             Camera.GetVirtOrigin(Camera.tmpOr);
             XOffset = Camera.tmpOr[0];
@@ -115,4 +98,5 @@ public class Camera3D extends Camera
     private float FOV;
     private float aspect;
     private int viewPortWidth;
+    private Point3f tmpR;
 }

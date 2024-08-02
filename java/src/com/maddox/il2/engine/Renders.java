@@ -13,7 +13,6 @@ import com.maddox.rts.Time;
 import com.maddox.rts.VK;
 import com.maddox.sound.AudioDevice;
 import java.util.TreeSet;
-import com.maddox.il2.ai.EventLog;
 
 // Referenced classes of package com.maddox.il2.engine:
 //            Render, RendersTicker, RendersComparator, Config, 
@@ -55,12 +54,14 @@ public class Renders
 
     public int width()
     {
-        return width;
+        //return width;
+    	return 256;
     }
 
     public int height()
     {
-        return height;
+        //return height;
+    	return 144;
     }
 
     public boolean isSaveAspect()

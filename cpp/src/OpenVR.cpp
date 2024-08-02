@@ -2,7 +2,7 @@
 #include <openvr/openvr.h>
 #include <glm/glm.hpp>
 #include <glew/glew.h>
-#include <sstream>
+#include <fstream>
 
 struct FramebufferDesc
 {
@@ -124,6 +124,11 @@ JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_init(JNIEnv *env, jclass 
 	glm::vec3 rightEyeLocation = GetEyeVector(vr::VRSystem()->GetEyeToHeadTransform(vr::Eye_Right));
 	env->SetFloatArrayRegion(reinterpret_cast<jfloatArray>(env->GetStaticObjectField(self, env->GetStaticFieldID(self, "rightEyeLocation", "[F"))), 0, 3, &rightEyeLocation.x);
 
+	/*std::ofstream ofs("C:\\Users\\firepolo\\Desktop\\test.txt");
+	ofs << "Width: " << renderWidth << std::endl;
+	ofs << "Height: " << renderHeight << std::endl;
+	ofs << "Fov: " << glm::degrees(glm::abs(atanf(tmp[0])) + glm::abs(atanf(tmp[1]))) << std::endl;
+	ofs.close();*/
 
 	/*projectionLeft = GetHMDMatrixProjectionEye(vr::Eye_Left);
 	projectionRight = GetHMDMatrixProjectionEye(vr::Eye_Right);

@@ -79,7 +79,7 @@
     <LibraryPath>E:\libraries\x86\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>E:\projects\il2vr\include;C:\Program Files %28x86%29\Java\jdk1.3.1_28\include\win32;C:\Program Files %28x86%29\Java\jdk1.3.1_28\include;E:\libraries\x86\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>E:\projects\il2vr\cpp\include;C:\Program Files %28x86%29\Java\jdk1.3.1_28\include\win32;C:\Program Files %28x86%29\Java\jdk1.3.1_28\include;E:\libraries\x86\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <LibraryPath>E:\libraries\x86\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -122,7 +122,7 @@
       <AdditionalDependencies>openvr_api.lib;opengl32.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy E:\projects\il2vr\Release\il2vr.dll "C:\Program Files (x86)\Ubisoft\IL-2 Sturmovik 1946\"</Command>
+      <Command>copy E:\projects\il2vr\cpp\Release\il2vr.dll "C:\Program Files (x86)\Ubisoft\IL-2 Sturmovik 1946\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -160,11 +160,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Logger.cpp" />
     <ClCompile Include="src\OpenVR.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Logger.hpp" />
     <ClInclude Include="include\OpenVR.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
