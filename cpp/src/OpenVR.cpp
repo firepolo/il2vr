@@ -17,8 +17,7 @@ FramebufferDesc leftEyeDesc;
 FramebufferDesc rightEyeDesc;
 GLuint framebuffer, renderbuffer;
 uint32_t renderWidth, renderHeight;
-int32_t viewWidth, viewHeight;
-int32_t adaptedWidth, adaptedHeight;
+uint32_t adaptedWidth, adaptedHeight;
 
 /*glm::mat4 projectionLeft, projectionRight;
 glm::mat4 eyePosLeft, eyePosRight;*/
@@ -117,6 +116,12 @@ JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_init(JNIEnv *env, jclass 
 	env->SetStaticIntField(self, env->GetStaticFieldID(self, "renderWidth", "I"), renderWidth);
 	env->SetStaticIntField(self, env->GetStaticFieldID(self, "renderHeight", "I"), renderHeight);
 
+	std::ofstream ofs("C:\\Users\\firepolo\\Desktop\\test.txt", std::ofstream::out | std::ofstream::app);
+	ofs << "init" << std::endl;
+	ofs << "renderWidth: " << renderWidth << std::endl;
+	ofs << "renderHeight: " << renderHeight << std::endl;
+	ofs.close();
+
 	vr::VRSystem()->GetProjectionRaw(vr::Eye_Left, &tmp[0], &tmp[1], &tmp[2], &tmp[3]);
 	env->SetStaticFloatField(self, env->GetStaticFieldID(self, "fov", "F"), glm::degrees(glm::abs(atanf(tmp[0])) + glm::abs(atanf(tmp[1]))));
 
@@ -149,22 +154,32 @@ JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_shutdown(JNIEnv* env, jcl
 
 JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_getAdaptedWidth(JNIEnv* env, jclass self, jint width, jint height)
 {
-	viewWidth = width;
+	std::ofstream ofs("C:\\Users\\firepolo\\Desktop\\test.txt", std::ofstream::out | std::ofstream::app);
+	ofs << "getAdaptedWidth" << std::endl;
+	ofs.close();
+
 	const float r = renderWidth / (float)renderHeight;
-	adaptedWidth = int32_t(r < width / (float)height ? r * height : width);
+	adaptedWidth = uint32_t(r < width / (float)height ? r * height : width);
 	return (jint)adaptedWidth;
 }
 
 JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_getAdaptedHeight(JNIEnv* env, jclass self, jint width, jint height)
 {
-	viewHeight = height;
+	std::ofstream ofs("C:\\Users\\firepolo\\Desktop\\test.txt", std::ofstream::out | std::ofstream::app);
+	ofs << "getAdaptedHeight" << std::endl;
+	ofs.close();
+
 	const float r = renderHeight / (float)renderWidth;
-	adaptedHeight = int32_t(r >= height / (float)width ? height : r * width);
+	adaptedHeight = uint32_t(r >= height / (float)width ? height : r * width);
 	return (jint)adaptedHeight;
 }
 
 JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_initGL(JNIEnv* env, jclass self)
 {
+	std::ofstream ofs("C:\\Users\\firepolo\\Desktop\\test.txt", std::ofstream::out | std::ofstream::app);
+	ofs << "initGL" << std::endl;
+	ofs.close();
+
 	if (glewInit() != GLEW_OK) return 1;
 
 	if (!CreateFrameBuffer(leftEyeDesc)) return 2;
