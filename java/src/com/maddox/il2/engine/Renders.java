@@ -54,14 +54,12 @@ public class Renders
 
     public int width()
     {
-        //return width;
-    	return 256;
+        return width;
     }
 
     public int height()
     {
-        //return height;
-    	return 144;
+        return height;
     }
 
     public boolean isSaveAspect()

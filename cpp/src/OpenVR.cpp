@@ -17,6 +17,8 @@ FramebufferDesc leftEyeDesc;
 FramebufferDesc rightEyeDesc;
 GLuint framebuffer, renderbuffer;
 uint32_t renderWidth, renderHeight;
+int32_t viewWidth, viewHeight;
+int32_t adaptedWidth, adaptedHeight;
 
 /*glm::mat4 projectionLeft, projectionRight;
 glm::mat4 eyePosLeft, eyePosRight;*/
@@ -140,6 +142,27 @@ JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_init(JNIEnv *env, jclass 
 	return 0;
 }
 
+JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_shutdown(JNIEnv* env, jclass self)
+{
+	vr::VR_Shutdown();
+}
+
+JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_getAdaptedWidth(JNIEnv* env, jclass self, jint width, jint height)
+{
+	viewWidth = width;
+	const float r = renderWidth / (float)renderHeight;
+	adaptedWidth = int32_t(r < width / (float)height ? r * height : width);
+	return (jint)adaptedWidth;
+}
+
+JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_getAdaptedHeight(JNIEnv* env, jclass self, jint width, jint height)
+{
+	viewHeight = height;
+	const float r = renderHeight / (float)renderWidth;
+	adaptedHeight = int32_t(r >= height / (float)width ? height : r * width);
+	return (jint)adaptedHeight;
+}
+
 JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_initGL(JNIEnv* env, jclass self)
 {
 	if (glewInit() != GLEW_OK) return 1;
@@ -148,11 +171,6 @@ JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_initGL(JNIEnv* env, jclas
 	if (!CreateFrameBuffer(rightEyeDesc)) return 2;
 
 	return 0;
-}
-
-JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_shutdown(JNIEnv *env, jclass self)
-{
-	vr::VR_Shutdown();
 }
 
 JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_shutdownGL(JNIEnv* env, jclass self)
@@ -178,8 +196,8 @@ JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_postRenderLeft(JNIEnv *en
  	glBindFramebuffer(GL_READ_FRAMEBUFFER, leftEyeDesc.renderFramebufferId);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, leftEyeDesc.resolveFramebufferId);
 
-    //glBlitFramebuffer(0, 0, renderWidth, renderHeight, 0, 0, renderWidth, renderHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
-    glBlitFramebuffer(0, 0, 1920, 1080, 0, 512, 0 + 1920, 512 + 1080, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    glBlitFramebuffer(0, 0, adaptedWidth, adaptedHeight, 0, 0, renderWidth, renderHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    //glBlitFramebuffer(0, 0, 1920, 1080, 0, 512, 0 + 1920, 512 + 1080, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
  	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -192,8 +210,8 @@ JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_postRenderRight(JNIEnv *e
  	glBindFramebuffer(GL_READ_FRAMEBUFFER, rightEyeDesc.renderFramebufferId);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, rightEyeDesc.resolveFramebufferId);
 
-    //glBlitFramebuffer(0, 0, renderWidth, renderHeight, 0, 0, renderWidth, renderHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
-    glBlitFramebuffer(0, 0, 1920, 1080, 0, 512, 0 + 1920, 512 + 1080, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    glBlitFramebuffer(0, 0, adaptedWidth, adaptedHeight, 0, 0, renderWidth, renderHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+    //glBlitFramebuffer(0, 0, 1920, 1080, 0, 512, 0 + 1920, 512 + 1080, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
  	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);

@@ -25,6 +25,22 @@ JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_shutdown
 
 /*
  * Class:     com_maddox_il2_game_OpenVR
+ * Method:    getAdaptedWidth
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_getAdaptedWidth
+(JNIEnv*, jclass, jint, jint);
+
+/*
+ * Class:     com_maddox_il2_game_OpenVR
+ * Method:    getAdaptedHeight
+ * Signature: (II)I
+ */
+JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_getAdaptedHeight
+(JNIEnv*, jclass, jint, jint);
+
+/*
+ * Class:     com_maddox_il2_game_OpenVR
  * Method:    initGL
  * Signature: ()I
  */

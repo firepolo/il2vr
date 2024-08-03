@@ -26,6 +26,9 @@ public class OpenVR
 	public static native int init();
 	public static native void shutdown();
 	
+	public static native int getAdaptedWidth(int width, int height);
+	public static native int getAdaptedHeight(int width, int height);
+	
 	public static native int initGL();
 	public static native void shutdownGL();
 	
