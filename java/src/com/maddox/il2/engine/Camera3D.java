@@ -5,10 +5,7 @@
 
 package com.maddox.il2.engine;
 
-import com.maddox.JGP.Point3d;
 import com.maddox.JGP.Point3f;
-import com.maddox.JGP.Tuple3f;
-import com.maddox.il2.ai.EventLog;
 import com.maddox.il2.game.OpenVR;
 
 // Referenced classes of package com.maddox.il2.engine:
@@ -70,12 +67,20 @@ public class Camera3D extends Camera
             Camera.SetFOV(FOV, ZNear, ZFar);
             pos.getRender(Camera.tmpP, Camera.tmpO);
             
-            tmpR.set(OpenVR.currentEyeLocation.z, -OpenVR.currentEyeLocation.x, OpenVR.currentEyeLocation.y);
-            Camera.tmpO.transform(tmpR);
+            //tmpHmdO.set(OpenVR.hmdLocation[4], OpenVR.hmdLocation[3], -OpenVR.hmdLocation[5]);
+            tmpHmdO.set(OpenVR.hmdLocation[4], -OpenVR.hmdLocation[3], OpenVR.hmdLocation[5]);
+            tmpHmdO.add(Camera.tmpO);
+            Camera.tmpO.set(tmpHmdO);
+            
+            tmpEyeP.set(OpenVR.currentEyeLocation.z, -OpenVR.currentEyeLocation.x, OpenVR.currentEyeLocation.y);
+            Camera.tmpO.transform(tmpEyeP);
+            
+            tmpHmdP.set(OpenVR.hmdLocation[2], OpenVR.hmdLocation[0], OpenVR.hmdLocation[1]);
+            Camera.tmpO.transform(tmpHmdP);
 
-            Camera.tmpd[0] = Camera.tmpP.x + tmpR.x;
-            Camera.tmpd[1] = Camera.tmpP.y + tmpR.y;
-            Camera.tmpd[2] = Camera.tmpP.z + tmpR.z;
+            Camera.tmpd[0] = Camera.tmpP.x + tmpHmdP.x + tmpEyeP.x;
+            Camera.tmpd[1] = Camera.tmpP.y + tmpHmdP.y + tmpEyeP.y;
+            Camera.tmpd[2] = Camera.tmpP.z + tmpHmdP.z + tmpEyeP.z;
             Camera.tmpd[3] = -Camera.tmpO.azimut();
             Camera.tmpd[4] = Camera.tmpO.tangage();
             Camera.tmpd[5] = -Camera.tmpO.kren();
@@ -93,10 +98,17 @@ public class Camera3D extends Camera
         FOV = 90F;
         aspect = 1.333333F;
         viewPortWidth = 640;
+        tmpHmdP = new Point3f();
+        tmpEyeP = new Point3f();
+        tmpHmdO = new Orient();
+        //tmpEyeO = new Orient();
     }
 
     private float FOV;
     private float aspect;
     private int viewPortWidth;
-    private Point3f tmpR;
+    private Point3f tmpHmdP;
+    private Point3f tmpEyeP;
+    private Orient tmpHmdO;
+    //private Orient tmpEyeO;
 }

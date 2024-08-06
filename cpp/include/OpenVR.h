@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_maddox_il2_game_OpenVR
  * Method:    init
- * Signature: ()I
+ * Signature: (F)I
  */
 JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_init
-  (JNIEnv *, jclass);
+  (JNIEnv *, jclass, jfloat);
 
 /*
  * Class:     com_maddox_il2_game_OpenVR
@@ -22,22 +22,6 @@ JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_init
  */
 JNIEXPORT void JNICALL Java_com_maddox_il2_game_OpenVR_shutdown
   (JNIEnv *, jclass);
-
-/*
- * Class:     com_maddox_il2_game_OpenVR
- * Method:    getAdaptedWidth
- * Signature: (II)I
- */
-JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_getAdaptedWidth
-(JNIEnv*, jclass, jint, jint);
-
-/*
- * Class:     com_maddox_il2_game_OpenVR
- * Method:    getAdaptedHeight
- * Signature: (II)I
- */
-JNIEXPORT jint JNICALL Java_com_maddox_il2_game_OpenVR_getAdaptedHeight
-(JNIEnv*, jclass, jint, jint);
 
 /*
  * Class:     com_maddox_il2_game_OpenVR

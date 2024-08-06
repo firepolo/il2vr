@@ -109,8 +109,8 @@ public class GLContext
             makeCurrent(null);
             if(isCreated())
                 destroy();
-            width = OpenVR.getAdaptedWidth(j, k);
-            height = OpenVR.getAdaptedHeight(j, k);
+            width = j;
+            height = k;
             int ai[] = caps.getCaps();
             CreateWin32(i, ai);
             Provider.contextCreated();

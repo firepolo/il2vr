@@ -327,8 +327,6 @@ public class Renders
         
         OpenVR.getHmdLocation(OpenVR.hmdLocation);
         
-        //EventLog.type("FOV: " + OpenVR.fov);
-        
         OpenVR.currentEyeLocation.set(OpenVR.leftEyeLocation);
         doPaint();
         

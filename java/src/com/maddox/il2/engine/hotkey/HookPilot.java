@@ -590,67 +590,29 @@ public class HookPilot extends HookRender
         return f;
     }
     
-    // ***************************************
-    // MY PART BEGIN
-    // ***************************************
     public boolean computeRenderPos(Actor actor, Loc loc, Loc loc1)
     {
     	if(!bUse) return true;
-    	
-    	leanSide = _leanSide;
-        raise = _raise;
-        leanForward = _leanForward;
-        Tangage = _Tangage;
-    	Azimut = _Azimut;
-        Roll = _Roll;
-        
-        _leanSide = OpenVR.hmdLocation[0];
-        _raise = OpenVR.hmdLocation[1];
-        _leanForward = OpenVR.hmdLocation[2];
-        _Tangage = OpenVR.hmdLocation[3];
-        _Azimut = OpenVR.hmdLocation[4];
-        _Roll = OpenVR.hmdLocation[5];
         
         long nowTime = Time.currentReal();
         if(nowTime != rprevTime && !bSimpleUse)
         {
-            long elapsedTime = nowTime - rprevTime;
             rprevTime = nowTime;
-            if(_Azimut != Azimut || _Tangage != Tangage || _Roll != Roll)
-            {
-                Azimut = bvalue(_Azimut, Azimut, elapsedTime);
-                Tangage = bvalue(_Tangage, Tangage, elapsedTime);
-                Roll = bvalue(_Roll, Roll, elapsedTime);
-                o.set(Azimut, Tangage, Roll);
-            }
-            if(_leanForward != leanForward || _leanSide != leanSide || _raise != raise)
-            {
-                leanForward = cValue(leanForward, _leanForward, HookView.koofLeanF, elapsedTime);
-                leanSide = cValue(leanSide, _leanSide, HookView.koofLeanS, elapsedTime);
-                raise = cValue(raise, _raise, HookView.koofRaise, elapsedTime);
-            }
             
-            float f = spineL + raise;
             pNeck.set(pSpine);
-            pNeck.add((double)f * Math.sin(leanForward), (double)f * Math.sin(leanSide), (double)f * Math.cos(leanForward) * Math.cos(leanSide));
+            pNeck.add((double)spineL * Math.sin(leanForward), (double)spineL * Math.sin(leanSide), (double)spineL * Math.cos(leanForward) * Math.cos(leanSide));
 
-            float azimut = Azimut * 0.017453F;
-            float tangage = Tangage * 0.017453F;
-            float f2 = faceL * (float)(Math.cos(tangage) * Math.cos(azimut));
-            float f3 = -faceL * (float)(Math.cos(tangage) * Math.sin(azimut));
-            float f4 = faceL * (float)Math.sin(tangage);
-            Point3d point3d = new Point3d(pNeck);
-            point3d.add(f2, f3, f4);
-            pCenter.set(point3d);
+            /*Point3d point3d = new Point3d(pNeck);
+            point3d.add(OpenVR.hmdLocation[2], OpenVR.hmdLocation[0], OpenVR.hmdLocation[1]);
+            pCenter.set(point3d);*/
+            
+            pCenter.set(pNeck);
         }
         
         le.set(pCamera(), o);
         loc1.add(le, loc);
         return true;
     }
-    // ***************************************
-    // MY PART END
-    // ***************************************
 
     public void computePos(Actor actor, Loc loc, Loc loc1)
     {

@@ -208,13 +208,20 @@ public class MainWin3D extends Main3D
 
     public boolean beginApp(String s, String s1, int i)
     {
-    	if (OpenVR.init() != 0) return false;
+    	IniFile inifile = new IniFile(s);
+    	float factor = inifile.get("VR", "factor", 0.5f);
+    	
+    	if (OpenVR.init(factor) != 0) return false;
     	Main3D.FOVX = OpenVR.fov;
     	
-        IniFile inifile = new IniFile(s);
         RTSConf.cur = new RTSConfWin(inifile, "rts", i);
         RTSConf.cur.console.exec = new ConsoleExec();
         Config.cur = new Config(inifile, true);
+        Config.cur.windowWidth = (int)(OpenVR.renderWidth * factor);
+        Config.cur.windowHeight = (int)(OpenVR.renderHeight * factor);
+        Config.cur.windowFullScreen = false;
+        Config.cur.windowChangeScreenRes = false;
+        
         new Background();
         if("RU".equals(Config.LOCALE))
             MainWin32.GetAppPath();

@@ -23,7 +23,7 @@ public class OpenVR
 	public static int renderWidth;
 	public static int renderHeight;
 	
-	public static native int init();
+	public static native int init(float factor);
 	public static native void shutdown();
 	
 	public static native int getAdaptedWidth(int width, int height);
